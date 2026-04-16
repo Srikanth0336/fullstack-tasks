@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayFlow | Secure Transaction Simulator</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="10" fill="url(#grad)" />
+                    <path d="M12 20H28M28 20L22 14M28 20L22 26" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#6366F1" />
+                            <stop offset="1" stop-color="#A855F7" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>PayFlow</span>
+            </div>
+            <h1>Transaction Simulator</h1>
+            <p>Secure online payment processing with ACID compliance.</p>
+        </header>
+
+        <main>
+            <section class="payment-card">
+                <div class="card-header">
+                    <h2>Transfer Funds</h2>
+                </div>
+                
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label for="userSelect">Sender (User)</label>
+                        <select id="userSelect" required>
+                            <option value="">Select User</option>
+                        </select>
+                        <div class="balance-info" id="userBalance">Balance: $0.00</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="merchantSelect">Recipient (Merchant)</label>
+                        <select id="merchantSelect" required>
+                            <option value="">Select Merchant</option>
+                        </select>
+                        <div class="balance-info" id="merchantBalance">Balance: $0.00</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Transaction Amount</label>
+                        <div class="input-wrapper">
+                            <span class="currency">$</span>
+                            <input type="number" id="amount" placeholder="0.00" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="payBtn">
+                        <span class="btn-text">Process Transaction</span>
+                        <div class="loader" id="loader"></div>
+                    </button>
+                </form>
+
+                <div id="statusMessage" class="status-message"></div>
+            </section>
+
+            <section class="management-card">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="addUser">Add User</button>
+                    <button class="tab-btn" data-tab="addMerchant">Add Merchant</button>
+                </div>
+
+                <div id="addUser" class="tab-content active">
+                    <form id="userForm">
+                        <div class="form-group">
+                            <input type="text" id="newUserName" placeholder="Enter User Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="newUserBalance" placeholder="Initial Balance ($)" step="0.01" required>
+                        </div>
+                        <button type="submit" class="secondary-btn">Create User</button>
+                    </form>
+                </div>
+
+                <div id="addMerchant" class="tab-content">
+                    <form id="merchantForm">
+                        <div class="form-group">
+                            <input type="text" id="newMerchantName" placeholder="Enter Merchant Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="newMerchantBalance" placeholder="Initial Balance ($)" step="0.01" required>
+                        </div>
+                        <button type="submit" class="secondary-btn">Create Merchant</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 PayFlow Simulation. Uses MySQL COMMIT/ROLLBACK.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
