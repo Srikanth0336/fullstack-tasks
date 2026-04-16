@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Feedback Experience</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="feedback-card">
+            <h1>We Value Your Voice</h1>
+            <p class="subtitle">Your feedback helps us evolve and serve you better.</p>
+            
+            <form id="feedbackForm">
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your name" required>
+                    <span class="error-msg" id="nameError">Name must be at least 3 characters</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <span class="error-msg" id="emailError">Please enter a valid email</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="rating">Experience Rating</label>
+                    <div class="star-rating">
+                        <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+                        <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+                        <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+                        <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+                        <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="message">Your Thoughts</label>
+                    <textarea id="message" rows="4" placeholder="Tell us about your experience..." required></textarea>
+                    <span class="error-msg" id="messageError">Message cannot be empty</span>
+                </div>
+
+                <div class="submission-area">
+                    <button type="submit" id="submitBtn">
+                        Submit Feedback
+                        <span class="btn-info">(Double-click to confirm)</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Overlay -->
+    <div id="overlay" class="overlay">
+        <div class="modal">
+            <div class="success-icon">✓</div>
+            <h2>Thank You!</h2>
+            <p>Your feedback has been successfully recorded.</p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

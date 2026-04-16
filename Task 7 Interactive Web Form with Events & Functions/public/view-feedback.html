@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .container { max-width: 900px; }
+        .feedback-card { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 2rem; color: var(--text-main); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+        th { color: var(--primary); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+        .rating-badge { background: rgba(251, 191, 36, 0.1); color: #fbbf24; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+        .back-link:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Form</a>
+        <div class="feedback-card">
+            <h1>Feedback Dashboard</h1>
+            <p class="subtitle">Review what your customers are saying.</p>
+            
+            <table id="feedbackTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Rating</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody id="feedbackBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Loading feedbacks...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchFeedbacks() {
+            try {
+                const response = await fetch('/api/feedbacks');
+                const data = await response.json();
+                const body = document.getElementById('feedbackBody');
+                
+                if (data.length === 0) {
+                    body.innerHTML = '<tr><td colspan="5" style="text-align: center;">No feedback yet.</td></tr>';
+                    return;
+                }
+
+                body.innerHTML = data.map(item => `
+                    <tr>
+                        <td>${new Date(item.created_at).toLocaleDateString()}</td>
+                        <td style="font-weight: 600;">${item.name}</td>
+                        <td style="color: var(--text-muted);">${item.email}</td>
+                        <td><span class="rating-badge">${item.rating} ★</span></td>
+                        <td>${item.message}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('feedbackBody').innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--error);">Failed to load data.</td></tr>';
+            }
+        }
+
+        fetchFeedbacks();
+    </script>
+</body>
+</html>
