@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-color: #0F172A;
+            --card-bg: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --accent: #38BDF8;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 3rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            align-items: end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        input {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        button.btn-delete {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            box-shadow: none;
+            padding: 0.5rem 1rem;
+        }
+
+        button.btn-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr {
+            transition: background 0.3s;
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Student Portal</h1>
+        
+        <form id="studentForm" onsubmit="addStudent(event)">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Name</label>
+                    <input type="text" id="name" required placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label>Department</label>
+                    <input type="text" id="dept" required placeholder="Computer Science">
+                </div>
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number" id="age" required placeholder="20">
+                </div>
+                <button type="submit">Add Student</button>
+            </div>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Age</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody">
+                <!-- Data goes here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_URL = '/api/students';
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch(API_URL);
+                const students = await response.json();
+                const tbody = document.getElementById('studentTableBody');
+                
+                if(students.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No students found. Add one above!</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = students.map(student => `
+                    <tr>
+                        <td>#${student.id}</td>
+                        <td style="font-weight:600; color:white;">${student.name}</td>
+                        <td>${student.department}</td>
+                        <td>${student.age}</td>
+                        <td>
+                            <button class="btn-delete" onclick="deleteStudent(${student.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                document.getElementById('studentTableBody').innerHTML = `<tr><td colspan="5" class="empty-state" style="color:red">Error connecting to the API. Make sure the server is running without errors.</td></tr>`;
+            }
+        }
+
+        async function addStudent(e) {
+            e.preventDefault();
+            const newStudent = {
+                name: document.getElementById('name').value,
+                department: document.getElementById('dept').value,
+                age: parseInt(document.getElementById('age').value)
+            };
+
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newStudent)
+            });
+
+            document.getElementById('studentForm').reset();
+            fetchStudents();
+        }
+
+        async function deleteStudent(id) {
+            await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            fetchStudents();
+        }
+
+        // Initial load
+        fetchStudents();
+    </script>
+</body>
+</html>
